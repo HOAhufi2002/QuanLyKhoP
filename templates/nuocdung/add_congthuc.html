@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Thêm Công Thức Nấu Nước Dùng</h1>
+<form method="POST" action="{{ url_for('nuocdung.add_congthuc') }}">
+    <div class="form-group">
+        <label for="TenCongThuc">Tên Công Thức</label>
+        <input type="text" class="form-control" id="TenCongThuc" name="TenCongThuc" required>
+    </div>
+    <div class="form-group">
+        <label for="NguyenLieuID">Nguyên Liệu</label>
+        <div>
+            {% for nguyenlieu in nguyenlieu_list %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="NguyenLieuID" value="{{ nguyenlieu.TenNguyenLieu }}" id="nguyenlieu{{ nguyenlieu.ID }}">
+                <label class="form-check-label" for="nguyenlieu{{ nguyenlieu.ID }}">{{ nguyenlieu.TenNguyenLieu }}</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="PhuGiaGiaViID">Phụ Gia/Gia Vị</label>
+        <div>
+            {% for phugia in phugiagiavi_list %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="PhuGiaGiaViID" value="{{ phugia.TenPhuGia }}" id="phugia{{ phugia.ID }}">
+                <label class="form-check-label" for="phugia{{ phugia.ID }}">{{ phugia.TenPhuGia }}</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="PhuongPhap">Phương Pháp</label>
+        <textarea class="form-control" id="PhuongPhap" name="PhuongPhap" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Thêm Công Thức</button>
+</form>
+{% endblock %}

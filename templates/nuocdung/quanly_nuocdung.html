@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Quản lý công thức nấu</h1>
+{% if session['Quyen'] == 'Admin' %}
+<a href="{{ url_for('nuocdung.add_congthuc') }}" class="btn btn-primary mb-3">Thêm mới</a>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách nguyên liệu</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Công Thức</th>
+                        <th>Nguyên Liệu</th>
+                        <th>Phụ Gia/Gia Vị</th>
+                        <th>Phương Pháp</th>
+                                    {% if session['Quyen'] == 'Admin' %}             <th>Hành Động</th>    {% endif %}
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for congthuc in congthuc_list %}
+                    <tr>
+                        <td>{{ congthuc.ID }}</td>
+                        <td>{{ congthuc.TenCongThuc }}</td>
+                        <td>{{ congthuc.NguyenLieuID }}</td>
+                        <td>{{ congthuc.PhuGiaGiaViID }}</td>
+                        <td>{{ congthuc.PhuongPhap }}</td>
+                        {% if session['Quyen'] == 'Admin' %}     <td>
+                            <a href="{{ url_for('nuocdung.edit_congthuc', id=congthuc.ID) }}" class="btn btn-primary">Sửa</a>
+                            <form action="{{ url_for('nuocdung.delete_congthuc', id=congthuc.ID) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </td>    {% endif %}
+                      
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

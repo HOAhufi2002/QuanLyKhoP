@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Báo cáo và phân tích</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên Nguyên Liệu/Phụ Gia</th>
+            <th>Số Lượng Tồn Kho</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in nguyenlieu %}
+        <tr>
+            <td>{{ item.TenNguyenLieu }}</td>
+            <td>{{ item.SoLuongTonKho | int }}</td>
+        </tr>
+        {% endfor %}
+        {% for item in phugiagiavi %}
+        <tr>
+            <td>{{ item.TenPhuGia }}</td>
+            <td>{{ item.SoLuongTonKho | int }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Hiệu Suất Tồn Kho: {{ hieu_suat_tonkho  | int}}</h2>
+
+<!-- Hiển thị biểu đồ -->
+<div>
+    <img src="data:image/png;base64,{{ img_base64 }}" alt="Biểu đồ hiệu suất quản lý tồn kho">
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Quản lý nguyên liệu phổ biến cho phở bò</h1>
+{% if session['Quyen'] == 'Admin' %}
+<a href="{{ url_for('nguyenlieu.add_nguyenlieu') }}" class="btn btn-primary mb-3">Thêm mới</a>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách nguyên liệu</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên Nguyên Liệu</th>
+                        <th>Mô Tả</th>
+                        <th>Đơn Vị Tính</th>
+                        <th>Số Lượng Tồn Kho</th>
+                        <th>Ngày Hết Hạn</th>
+                        {% if session['Quyen'] == 'Admin' %}
+                        <th>Hành Động</th>                            {% endif %}
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in nguyenlieu %}
+                    <tr>
+                        <td>{{ item.TenNguyenLieu }}</td>
+                        <td>{{ item.MoTa }}</td>
+                        <td>{{ item.DonViTinh }}</td>
+                        <td>{{ item.SoLuongTonKho | int }}</td>
+                        <td>{{ item.NgayHetHan }}</td>
+                            {% if session['Quyen'] == 'Admin' %}
+                            <td>
+
+                            <a href="{{ url_for('nguyenlieu.edit_nguyenlieu', id=item.id) }}" class="btn btn-primary btn-sm">Sửa</a>
+                            <a href="{{ url_for('nguyenlieu.delete_nguyenlieu', id=item.id) }}" class="btn btn-danger btn-sm">Xóa</a>
+                        </td>
+
+                            {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

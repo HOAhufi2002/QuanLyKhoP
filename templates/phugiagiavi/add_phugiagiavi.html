@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Thêm Phụ Gia/Gia Vị</h1>
+<form method="POST">
+    <div class="form-group">
+        <label for="TenPhuGia">Tên Phụ Gia</label>
+        <input type="text" class="form-control" id="TenPhuGia" name="TenPhuGia" required>
+    </div>
+    <div class="form-group">
+        <label for="MoTa">Mô Tả</label>
+        <input type="text" class="form-control" id="MoTa" name="MoTa">
+    </div>
+    <div class="form-group">
+        <label for="DonViTinh">Đơn Vị Tính</label>
+        <input type="text" class="form-control" id="DonViTinh" name="DonViTinh">
+    </div>
+    <div class="form-group">
+        <label for="SoLuongTonKho">Số Lượng Tồn Kho</label>
+        <input type="number" class="form-control" id="SoLuongTonKho" name="SoLuongTonKho">
+    </div>
+    <div class="form-group">
+        <label for="NgayHetHan">Ngày Hết Hạn</label>
+        <input type="date" class="form-control" id="NgayHetHan" name="NgayHetHan">
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>
+{% endblock %}

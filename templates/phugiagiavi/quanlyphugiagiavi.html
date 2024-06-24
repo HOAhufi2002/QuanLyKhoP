@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Quản lý phụ gia và gia vị</h1>
+{% if session['Quyen'] == 'Admin' %}
+<a href="{{ url_for('phugiagiavi.add_phugiagiavi') }}" class="btn btn-primary mb-3">Thêm mới</a>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách phụ gia và gia vị</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên Phụ Gia</th>
+                        <th>Mô Tả</th>
+                        <th>Đơn Vị Tính</th>
+                        <th>Số Lượng Tồn Kho</th>
+                        <th>Ngày Hết Hạn</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in phugiagiavi %}
+                    <tr>
+                        <td>{{ item.TenPhuGia }}</td>
+                        <td>{{ item.MoTa }}</td>
+                        <td>{{ item.DonViTinh }}</td>
+                        <td>{{ item.SoLuongTonKho | int }}</td>
+                        <td>{{ item.NgayHetHan }}</td>
+                        <td>
+                            {% if session['Quyen'] == 'Admin'
+                            %}
+                            <a href="{{ url_for('phugiagiavi.edit_phugiagiavi', id=item.id) }}" class="btn btn-primary btn-sm">Sửa</a>
+                            <a href="{{ url_for('phugiagiavi.delete_phugiagiavi', id=item.id) }}" class="btn btn-danger btn-sm">Xóa</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

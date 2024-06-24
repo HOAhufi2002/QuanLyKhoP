@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Thêm Nhà Cung Cấp</h1>
+
+<form method="POST" action="{{ url_for('nhacungcap.add_nhacungcap') }}">
+    <div class="form-group">
+        <label for="ten">Tên Nhà Cung Cấp</label>
+        <input type="text" class="form-control" id="ten" name="ten" required>
+    </div>
+    <div class="form-group">
+        <label for="diachi">Địa Chỉ</label>
+        <input type="text" class="form-control" id="diachi" name="diachi">
+    </div>
+    <div class="form-group">
+        <label for="sodienthoai">Số Điện Thoại</label>
+        <input type="text" class="form-control" id="sodienthoai" name="sodienthoai">
+    </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email">
+    </div>
+    <div class="form-group">
+        <label for="loai_nguyenlieu">Loại Nguyên Liệu</label>
+        <input type="text" class="form-control" id="loai_nguyenlieu" name="loai_nguyenlieu">
+    </div>
+    <button type="submit" class="btn btn-primary">Thêm</button>
+</form>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Quản lý nhà cung cấp</h1>
+{% if session['Quyen'] == 'Admin' %}
+<a href="{{ url_for('nhacungcap.add_nhacungcap') }}" class="btn btn-primary mb-3">Thêm mới</a>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách nhà cung cấp</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên Nhà Cung Cấp</th>
+            <th>Địa Chỉ</th>
+            <th>Số Điện Thoại</th>
+            <th>Email</th>
+            <th>Loại Nguyên Liệu</th>
+                     {% if session['Quyen'] == 'Admin' %}    <th>Hành Động</th>     {% endif %}
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in nhacungcap %}
+        <tr>
+            <td>{{ item.ID }}</td>
+            <td>{{ item.TenNhaCungCap }}</td>
+            <td>{{ item.DiaChi }}</td>
+            <td>{{ item.SoDienThoai }}</td>
+            <td>{{ item.Email }}</td>
+            <td>{{ item.LoaiNguyenLieu }}</td>
+            {% if session['Quyen'] == 'Admin' %}   
+
+            <td>
+                <a href="{{ url_for('nhacungcap.edit_nhacungcap', id=item.ID) }}" class="btn btn-primary">Sửa</a>
+                <a href="{{ url_for('nhacungcap.delete_nhacungcap', id=item.ID) }}" class="btn btn-danger">Xóa</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+{% endblock %}

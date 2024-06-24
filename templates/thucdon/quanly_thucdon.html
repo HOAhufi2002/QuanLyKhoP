@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Quản lý thực đơn</h1>
+{% if session['Quyen'] == 'Admin' %}
+<a href="{{ url_for('thucdon.add_thucdon') }}" class="btn btn-primary mb-3">Thêm Thực Đơn</a>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách thực đơn</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Thực Đơn</th>
+                        <th>Mô Tả</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for thucdon in thucdon_list %}
+                    <tr>
+                        <td>{{ thucdon.ID }}</td>
+                        <td>{{ thucdon.TenThucDon }}</td>
+                        <td>{{ thucdon.MoTa }}</td>
+                        <td>
+                            <a href="{{ url_for('thucdon.edit_thucdon', id=thucdon.ID) }}" class="btn btn-primary">Sửa</a>
+                            <form action="{{ url_for('thucdon.delete_thucdon', id=thucdon.ID) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                            <a href="{{ url_for('thucdon.quanly_monan', thucdon_id=thucdon.ID) }}" class="btn btn-secondary">Xem Món Ăn</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

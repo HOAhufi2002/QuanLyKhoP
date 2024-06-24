@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Quản lý tồn kho</h1>
+
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách nguyên liệu</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên Nguyên Liệu</th>
+            <th>Số Lượng Tồn Kho</th>
+            <th>Cảnh Báo</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in nguyenlieu %}
+        <tr>
+            <td>{{ item.ID }}</td>
+            <td>{{ item.TenNguyenLieu }}</td>
+            <td>{{ item.SoLuongTonKho | int}}</td>
+            <td>
+                {% if item in low_inventory_items %}
+                <span class="text-danger">Cần đặt hàng thêm!</span>
+                {% else %}
+                <span class="text-success">Đủ hàng</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+</div>
+{% endblock %}

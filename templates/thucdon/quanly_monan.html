@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Quản lý món ăn</h1>
+{% if session['Quyen'] == 'Admin' %}
+<a href="{{ url_for('thucdon.add_monan', thucdon_id=thucdon_id) }}" class="btn btn-primary mb-3">Thêm Món Ăn</a>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách món ăn</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Món Ăn</th>
+                        <th>Mô Tả</th>
+                        <th>Nguyên Liệu</th>
+                        <th>Phụ Gia/Gia Vị</th>
+                        <th>Phương Pháp</th>
+                        <th>Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for monan in monan_list %}
+                    <tr>
+                        <td>{{ monan.ID }}</td>
+                        <td>{{ monan.TenMonAn }}</td>
+                        <td>{{ monan.MoTa }}</td>
+                        <td>{{ monan.NguyenLieu }}</td>
+                        <td>{{ monan.PhuGiaGiaVi }}</td>
+                        <td>{{ monan.PhuongPhap }}</td>
+                        <td>
+                            <a href="{{ url_for('thucdon.edit_monan', id=monan.ID) }}" class="btn btn-primary">Sửa</a>
+                            <form action="{{ url_for('thucdon.delete_monan', id=monan.ID) }}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
