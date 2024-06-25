@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Chỉnh Sửa Tài Khoản</h1>
+</div>
+
+<form method="POST" action="{{ url_for('loginregister.edit_taikhoan', id=taikhoan.ID) }}">
+    <div class="form-group">
+        <label for="TenDangNhap">Tên đăng nhập</label>
+        <input type="text" class="form-control" id="TenDangNhap" name="TenDangNhap" value="{{ taikhoan.TenDangNhap }}" required>
+    </div>
+    <div class="form-group">
+        <label for="HoTen">Họ tên</label>
+        <input type="text" class="form-control" id="HoTen" name="HoTen" value="{{ taikhoan.HoTen }}">
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="{{ taikhoan.Email }}" required>
+    </div>
+    <div class="form-group">
+        <label for="Quyen">Quyền</label>
+        <select class="form-control" id="Quyen" name="Quyen">
+            <option value="Admin" {% if taikhoan.Quyen == 'Admin' %}selected{% endif %}>Admin</option>
+            <option value="NhanVien" {% if taikhoan.Quyen == 'NhanVien' %}selected{% endif %}>Nhân Viên</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="isActive">Kích hoạt</label>
+        <input type="checkbox" id="isActive" name="isActive" {% if taikhoan.isActive %}checked{% endif %}>
+    </div>
+    <div class="form-group">
+        <label for="MatKhau">Mật khẩu mới (nếu muốn thay đổi)</label>
+        <input type="password" class="form-control" id="MatKhau" name="MatKhau">
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+</form>
+{% endblock %}

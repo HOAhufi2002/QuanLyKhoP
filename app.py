@@ -60,11 +60,7 @@ def index():
 
     return render_template('index.html', total_ingredients=total_ingredients, total_dishes=total_dishes, total_suppliers=total_suppliers, ingredient_names=ingredient_names, ingredient_stock_levels=ingredient_stock_levels, supplier_names=supplier_names, ingredients_by_supplier=ingredients_by_supplier)
 
-# @app.route('/')
-# def index():
-#     if 'user_id' not in session:
-#         return redirect(url_for('loginregister.login'))
-#     return render_template('index.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

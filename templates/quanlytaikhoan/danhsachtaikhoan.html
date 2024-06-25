@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Danh Sách Tài Khoản</h1>
+</div>
+
+{% if message %}
+<div class="alert alert-info">{{ message }}</div>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách tài khoản</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên đăng nhập</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Quyền</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for account in accounts %}
+                    <tr>
+                        <td>{{ account.ID }}</td>
+                        <td>{{ account.TenDangNhap }}</td>
+                        <td>{{ account.HoTen }}</td>
+                        <td>{{ account.Email }}</td>
+                        <td>{{ account.Quyen }}</td>
+                        <td>
+                            <input type="checkbox" disabled {% if account.isActive %}checked{% endif %}>
+                        </td>
+
+                        <td>
+                            <a href="{{ url_for('loginregister.edit_taikhoan', id=account.ID) }}" class="btn btn-primary btn-sm">Sửa</a>
+                            <a href="{{ url_for('loginregister.delete_taikhoan', id=account.ID) }}" class="btn btn-danger btn-sm">Xóa</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
