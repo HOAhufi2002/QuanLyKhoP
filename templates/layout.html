@@ -89,7 +89,7 @@
                 </a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('nhacungcap.quanly_nhacungcap') }}">
+                <a class="nav-link" href="{{ url_for('nhacungcap.list_nhacungcap') }}">
                     <i class="fas fa-fw fa-truck"></i>
                     <span>QUẢN LÝ NCC</span>
                 </a>
@@ -106,11 +106,26 @@
                     <span>REPORT ANALYTICS</span>
                 </a>
             </li>
+            <!-- Thêm vào sidebar hoặc navigation bar -->
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('nguyenlieu.xuat_kho_nguyenlieu') }}">
+        <i class="fas fa-fw fa-box"></i>
+        <span>Xuất Kho Nguyên Liệu</span>
+    </a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" href="{{ url_for('phugiagiavi.xuat_kho_phugia') }}">
+        <i class="fas fa-fw fa-box"></i>
+        <span>Xuất Kho Phụ Gia</span>
+    </a>
+</li>
+
             <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('loginregister.account_management') }}">
                     <i class="fas fa-fw fa-user"></i>
                     <span>QUẢN LÝ TÀI KHOẢN</span></a>
             </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 

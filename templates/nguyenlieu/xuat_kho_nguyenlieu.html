@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Xuất Kho Nguyên Liệu</h1>
+
+<form method="POST" action="{{ url_for('nguyenlieu.xuat_kho_nguyenlieu') }}">
+    <div class="form-group">
+        <label for="NguyenLieuID">Nguyên Liệu</label>
+        <select class="form-control" id="NguyenLieuID" name="NguyenLieuID" required>
+            {% for nl in nguyenlieu %}
+            <option value="{{ nl.ID }}">{{ nl.TenNguyenLieu }} - {{ nl.SoLuongTon }} {{ nl.DonViTinh }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="SoLuongXuat">Số Lượng Xuất</label>
+        <input type="number" class="form-control" id="SoLuongXuat" name="SoLuongXuat" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Xuất Kho</button>
+</form>
+
+{% if error %}
+<div class="alert alert-danger mt-3">{{ error }}</div>
+{% endif %}
+
+<h2 class="mt-5">Lịch Sử Xuất Kho</h2>
+<div class="card shadow mb-4">
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Nguyên Liệu</th>
+                <th>Số Lượng Xuất</th>
+                <th>Đơn Vị Tính</th>
+                <th>Ngày Xuất</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for xk in xuat_kho %}
+            <tr>
+                <td>{{ xk.ID }}</td>
+                <td>{{ xk.TenNguyenLieu }}</td>
+                <td>{{ xk.SoLuongXuat }}</td>
+                <td>{{ xk.DonViTinh }}</td>
+                <td>{{ xk.NgayXuat.strftime('%d-%m-%Y %H:%M:%S') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+
+{% endblock %}

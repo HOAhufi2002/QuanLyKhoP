@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Thống Kê Tỷ Lệ Nhập Xuất</h1>
+
+<form method="get" action="{{ url_for('thong_ke') }}">
+    <div class="form-group">
+        <label for="start_date">Ngày Bắt Đầu:</label>
+        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}">
+    </div>
+    <div class="form-group">
+        <label for="end_date">Ngày Kết Thúc:</label>
+        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Xem Thống Kê</button>
+</form>
+
+{% if data %}
+<div class="table-responsive mt-4">
+    <table class="table table-bordered" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Tên Nguyên Liệu</th>
+                <th>Tổng Nhập</th>
+                <th>Tổng Xuất</th>
+                <th>Tỷ Lệ Nhập Xuất</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{ row.TenNguyenLieu }}</td>
+                <td>{{ row.TotalNhap or 0 }}</td>
+                <td>{{ row.TotalXuat or 0 }}</td>
+                <td>
+                    {% if row.TotalNhap and row.TotalXuat %}
+                    {{ (row.TotalXuat / row.TotalNhap) | round(2) }}
+                    {% else %}
+                    N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

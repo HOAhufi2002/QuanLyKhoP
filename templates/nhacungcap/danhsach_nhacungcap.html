@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Quản lý Nhà cung cấp</h1>
+<a href="{{ url_for('nhacungcap.add_nhacungcap') }}" class="btn btn-primary btn-sm">Thêm nhà cung cấp</a>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách nhà cung cấp</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên Nhà Cung Cấp</th>
+            <th>Địa Chỉ</th>
+            <th>Số Điện Thoại</th>
+            <th>Email</th>
+            <th>Loại Nguyên Liệu</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for nhacungcap in nhacungcaps %}
+        <tr>
+            <td>{{ nhacungcap.ID }}</td>
+            <td>{{ nhacungcap.TenNhaCungCap }}</td>
+            <td>{{ nhacungcap.DiaChi }}</td>
+            <td>{{ nhacungcap.SoDienThoai }}</td>
+            <td>{{ nhacungcap.Email }}</td>
+            <td>{{ nhacungcap.LoaiNguyenLieu }}</td>
+            <td>
+                <a href="{{ url_for('nhacungcap.details_nhacungcap', id=nhacungcap.ID) }}" class="btn btn-info">Xem</a>
+                <a href="{{ url_for('nhacungcap.edit_nhacungcap', id=nhacungcap.ID) }}" class="btn btn-primary">Sửa</a>
+                <form action="{{ url_for('nhacungcap.delete_nhacungcap', id=nhacungcap.ID) }}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Xóa</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

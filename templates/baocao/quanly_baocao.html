@@ -1,36 +1,49 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>Báo cáo và phân tích</h1>
+<h1>Thống kê nhập xuất nguyên liệu và phụ gia</h1>
 
-<table class="table table-striped">
+<form method="GET" action="{{ url_for('thong_ke') }}">
+    <div class="form-group">
+        <label for="start_date">Ngày bắt đầu:</label>
+        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}">
+    </div>
+    <div class="form-group">
+        <label for="end_date">Ngày kết thúc:</label>
+        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Thống kê</button>
+</form>
+
+{% if data_nguyenlieu or data_phugia %}
+<h2>Kết quả thống kê</h2>
+<div>
+    <img src="{{ url_for('plot_png', start_date=start_date, end_date=end_date) }}" alt="Biểu đồ nhập xuất nguyên liệu và phụ gia">
+</div>
+<table class="table table-bordered mt-3">
     <thead>
         <tr>
-            <th>Tên Nguyên Liệu/Phụ Gia</th>
-            <th>Số Lượng Tồn Kho</th>
+            <th>Tên</th>
+            <th>Tổng nhập</th>
+            <th>Tổng xuất</th>
         </tr>
     </thead>
     <tbody>
-        {% for item in nguyenlieu %}
+        {% for row in data_nguyenlieu %}
         <tr>
-            <td>{{ item.TenNguyenLieu }}</td>
-            <td>{{ item.SoLuongTonKho | int }}</td>
+            <td>{{ row.TenNguyenLieu }}</td>
+            <td>{{ row.TotalNhap }}</td>
+            <td>{{ row.TotalXuat }}</td>
         </tr>
         {% endfor %}
-        {% for item in phugiagiavi %}
+        {% for row in data_phugia %}
         <tr>
-            <td>{{ item.TenPhuGia }}</td>
-            <td>{{ item.SoLuongTonKho | int }}</td>
+            <td>{{ row.TenPhuGia }}</td>
+            <td>{{ row.TotalNhap }}</td>
+            <td>{{ row.TotalXuat }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-
-<h2>Hiệu Suất Tồn Kho: {{ hieu_suat_tonkho  | int}}</h2>
-
-<!-- Hiển thị biểu đồ -->
-<div>
-    <img src="data:image/png;base64,{{ img_base64 }}" alt="Biểu đồ hiệu suất quản lý tồn kho">
-</div>
-
+{% endif %}
 {% endblock %}

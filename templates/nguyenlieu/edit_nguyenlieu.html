@@ -1,28 +1,44 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2>Sửa nguyên liệu</h2>
-<form action="{{ url_for('nguyenlieu.edit_nguyenlieu', id=nguyenlieu.id) }}" method="POST">
-    <div class="form-group">
-        <label for="TenNguyenLieu">Tên nguyên liệu</label>
-        <input type="text" class="form-control" id="TenNguyenLieu" name="TenNguyenLieu" value="{{ nguyenlieu.TenNguyenLieu }}" required>
-    </div>
-    <div class="form-group">
-        <label for="MoTa">Mô tả</label>
-        <input type="text" class="form-control" id="MoTa" name="MoTa" value="{{ nguyenlieu.MoTa }}">
-    </div>
-    <div class="form-group">
-        <label for="DonViTinh">Đơn vị tính</label>
-        <input type="text" class="form-control" id="DonViTinh" name="DonViTinh" value="{{ nguyenlieu.DonViTinh }}">
-    </div>
-    <div class="form-group">
-        <label for="SoLuongTonKho">Số lượng tồn kho</label>
-        <input type="number" class="form-control" id="SoLuongTonKho" name="SoLuongTonKho" value="{{ nguyenlieu.SoLuongTonKho }}" required>
-    </div>
-    <div class="form-group">
-        <label for="NgayHetHan">Ngày hết hạn</label>
-        <input type="date" class="form-control" id="NgayHetHan" name="NgayHetHan" value="{{ nguyenlieu.NgayHetHan }}">
-    </div>
-    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-</form>
+<div class="container">
+    <h2>Chỉnh Sửa Nguyên Liệu</h2>
+    <form method="POST" action="{{ url_for('nguyenlieu.edit_nguyenlieu', id=nguyenlieu.id) }}">
+        <div class="form-group">
+            <label for="TenNguyenLieu">Tên Nguyên Liệu:</label>
+            <input type="text" class="form-control" name="TenNguyenLieu" value="{{ nguyenlieu.TenNguyenLieu }}" required>
+        </div>
+        <div class="form-group">
+            <label for="MoTa">Mô Tả:</label>
+            <input type="text" class="form-control" name="MoTa" value="{{ nguyenlieu.MoTa }}">
+        </div>
+        <div class="form-group">
+            <label for="DonViTinh">Đơn Vị Tính:</label>
+            <input type="text" class="form-control" name="DonViTinh" value="{{ nguyenlieu.DonViTinh }}" required>
+        </div>
+        <div class="form-group">
+            <label for="SoLuongTonKho">Số Lượng Tồn Kho:</label>
+            <input type="number" class="form-control" name="SoLuongTonKho" value="{{ nguyenlieu.SoLuongTonKho | int}}" required>
+        </div>
+        <div class="form-group">
+            <label for="NgayNhap">Ngày Nhập:</label>
+            <input type="date" class="form-control" name="NgayNhap" value="{{ nguyenlieu.NgayNhap }}">
+        </div>
+        <div class="form-group">
+            <label for="NgayHetHan">Ngày Hết Hạn:</label>
+            <input type="date" class="form-control" name="NgayHetHan" value="{{ nguyenlieu.NgayHetHan }}">
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+    </form>
+    <button class="btn btn-secondary mt-3" onclick="goBack()">Trở về</button>
+
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
 {% endblock %}

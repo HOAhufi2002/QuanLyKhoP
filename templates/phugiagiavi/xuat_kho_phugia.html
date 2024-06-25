@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Xuất Kho Phụ Gia</h1>
+
+<form method="POST" action="{{ url_for('phugiagiavi.xuat_kho_phugia') }}">
+    <div class="form-group">
+        <label for="PhuGiaID">Phụ Gia/Gia Vị</label>
+        <select class="form-control" id="PhuGiaID" name="PhuGiaID" required>
+            {% for pg in phugiagiavi %}
+            <option value="{{ pg[0] }}">{{ pg[1] }} - {{ pg[2] }} {{ pg[3] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="SoLuongXuat">Số Lượng Xuất</label>
+        <input type="number" class="form-control" id="SoLuongXuat" name="SoLuongXuat" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Xuất Kho</button>
+</form>
+
+{% if error %}
+<div class="alert alert-danger mt-3">{{ error }}</div>
+{% endif %}
+
+<h2 class="mt-5">Lịch Sử Xuất Kho</h2>
+<div class="card shadow mb-4">
+
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên Phụ Gia</th>
+                <th>Số Lượng Xuất</th>
+                <th>Đơn Vị Tính</th>
+                <th>Ngày Xuất</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for xk in xuat_kho %}
+            <tr>
+                <td>{{ xk[0] }}</td>
+                <td>{{ xk[1] }}</td>
+                <td>{{ xk[2] }}</td>
+                <td>{{ xk[4] }}</td>
+                <td>{{ xk[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}
