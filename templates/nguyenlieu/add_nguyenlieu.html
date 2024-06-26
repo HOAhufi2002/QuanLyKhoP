@@ -1,28 +1,45 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2>Thêm nguyên liệu mới</h2>
-<form action="{{ url_for('nguyenlieu.add_nguyenlieu') }}" method="POST">
-    <div class="form-group">
-        <label for="TenNguyenLieu">Tên nguyên liệu</label>
-        <input type="text" class="form-control" id="TenNguyenLieu" name="TenNguyenLieu" required>
-    </div>
-    <div class="form-group">
-        <label for="MoTa">Mô tả</label>
-        <input type="text" class="form-control" id="MoTa" name="MoTa">
-    </div>
-    <div class="form-group">
-        <label for="DonViTinh">Đơn vị tính</label>
-        <input type="text" class="form-control" id="DonViTinh" name="DonViTinh">
-    </div>
-    <div class="form-group">
-        <label for="SoLuongTonKho">Số lượng tồn kho</label>
-        <input type="number" class="form-control" id="SoLuongTonKho" name="SoLuongTonKho" required>
-    </div>
-    <div class="form-group">
-        <label for="NgayHetHan">Ngày hết hạn</label>
-        <input type="date" class="form-control" id="NgayHetHan" name="NgayHetHan">
-    </div>
-    <button type="submit" class="btn btn-primary">Thêm nguyên liệu</button>
-</form>
+<div class="container">
+    <h2>Thêm Nguyên Liệu</h2>
+    <form method="POST" action="{{ url_for('nguyenlieu.add_nguyenlieu') }}">
+        <div class="form-group">
+            <label for="TenNguyenLieu">Tên Nguyên Liệu:</label>
+            <input type="text" class="form-control" name="TenNguyenLieu" required>
+        </div>
+        <div class="form-group">
+            <label for="MoTa">Mô Tả:</label>
+            <input type="text" class="form-control" name="MoTa">
+        </div>
+        <div class="form-group">
+            <label for="DonViTinh">Đơn Vị Tính:</label>
+            <input type="text" class="form-control" name="DonViTinh" required>
+        </div>
+        <div class="form-group">
+            <label for="SoLuongTonKho">Nhập số lượng:</label>
+            <input type="number" class="form-control" name="SoLuongTonKho" required>
+        </div>
+        <div class="form-group">
+            <label for="NgayNhap">Ngày Nhập:</label>
+            <input type="date" class="form-control" name="NgayNhap">
+        </div>
+        <div class="form-group">
+            <label for="NgayHetHan">Ngày Hết Hạn:</label>
+            <input type="date" class="form-control" name="NgayHetHan">
+        </div>
+
+
+        <button type="submit" class="btn btn-primary">Thêm Nguyên Liệu</button>
+
+    </form>
+    <button class="btn btn-secondary mt-3" onclick="goBack()">Trở về</button>
+
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
 {% endblock %}

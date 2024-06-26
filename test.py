@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 tonkho_bp = Blueprint('tonkho', __name__, template_folder='templates/tonkho')
 
-connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=Hiep\\SQLEXPRESS;DATABASE=quanlykhopho;Trusted_Connection=yes;"
+connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=minhhoa;DATABASE=quanlykhopho;UID=sa;PWD=123"
 
 @tonkho_bp.route('/')
 def quanly_tonkho():
@@ -39,22 +39,25 @@ def quanly_tonkho():
 def quanly_hansudung():
     conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()
+    
+    # Lấy danh sách nguyên liệu
     cursor.execute("""
-        SELECT NLB.ID, NLB.TenNguyenLieu,NLB.DonViTinh, NLB.SoLuongTonKho, NLB.NgayHetHan
-        FROM NguyenLieuPhoBo NLB
+        SELECT ID, TenNguyenLieu, SoLuongTonKho, DonViTinh, NgayHetHan
+        FROM NguyenLieuPhoBo
     """)
     nguyenlieu = cursor.fetchall()
     
+    # Lấy danh sách phụ gia
     cursor.execute("""
-        SELECT PGGV.ID, PGGV.TenPhuGia,PGGV.DonViTinh, PGGV.SoLuongTonKho, PGGV.NgayHetHan
-        FROM PhuGiaGiaVi PGGV
+        SELECT ID, TenPhuGia, SoLuongTonKho, DonViTinh, NgayHetHan
+        FROM PhuGiaGiaVi
     """)
     phugiagiavi = cursor.fetchall()
     conn.close()
     
     # Checking for near expiry items
     near_expiry_threshold = (datetime.now() + timedelta(days=7)).date()  # Convert to date object
-    near_expiry_items = [item for item in nguyenlieu if item.NgayHetHan and item.NgayHetHan < near_expiry_threshold]
+    near_expiry_nguyenlieu = [item for item in nguyenlieu if item.NgayHetHan and item.NgayHetHan < near_expiry_threshold]
     near_expiry_phugiagiavi = [item for item in phugiagiavi if item.NgayHetHan and item.NgayHetHan < near_expiry_threshold]
 
-    return render_template('quanly_hansudung.html', nguyenlieu=nguyenlieu, phugiagiavi=phugiagiavi, near_expiry_items=near_expiry_items, near_expiry_phugiagiavi=near_expiry_phugiagiavi)
+    return render_template('quanly_hansudung.html', nguyenlieu=nguyenlieu, near_expiry_nguyenlieu=near_expiry_nguyenlieu, phugiagiavi=phugiagiavi, near_expiry_phugiagiavi=near_expiry_phugiagiavi)

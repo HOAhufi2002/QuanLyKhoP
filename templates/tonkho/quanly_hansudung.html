@@ -1,8 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>Quản lý nguyên liệu phụ gia</h1>
-
+<h1>Quản lý hạn sử dụng</h1>
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -11,34 +10,80 @@
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên Nguyên Liệu</th>
-            <th>Số Lượng Tồn Kho</th>
-            <th>Ngày Hết Hạn</th>
-            <th>Cảnh Báo</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in nguyenlieu %}
-        <tr>
-            <td>{{ item.ID }}</td>
-            <td>{{ item.TenNguyenLieu }}</td>
-            <td>{{ item.SoLuongTonKho | int }}</td>
-            <td>{{ item.NgayHetHan }}</td>
-            <td>
-                {% if item in near_expiry_items %}
-                <span class="text-danger">Gần hết hạn!</span>
-                {% else %}
-                <span class="text-success">An toàn</span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                <thead>
+                    <tr>
+                        <th>Tên Nguyên Liệu</th>
+                        <th>Đơn Vị Tính</th>
+
+                        <th>Ngày Hết Hạn</th>
+                        <th>Cảnh Báo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in nguyenlieu %}
+                    <tr>
+                        <td>{{ item.TenNguyenLieu }}</td>
+                        <td>{{ item.DonViTinh }}</td>
+
+                        <td>{{ item.NgayHetHan.strftime('%d-%m-%Y') if item.NgayHetHan else '' }}</td>
+                        <td>
+                            {% if item in near_expiry_items %}
+                            <span class="text-danger">Gần hết hạn!</span>
+                            {% else %}
+                            <span class="text-success">An toàn</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách phụ gia và gia vị</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên Phụ Gia/Gia Vị</th>
+                        <th>Đơn Vị Tính</th>
+                        <th>Ngày Hết Hạn</th>
+                        <th>Cảnh Báo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in phugiagiavi %}
+                    <tr>
+                        <td>{{ item.TenPhuGia }}</td>
+                        <td>{{ item.DonViTinh }}</td>
+
+                        <td>{{ item.NgayHetHan.strftime('%d-%m-%Y') if item.NgayHetHan else '' }}</td>
+                        <td>
+                            {% if item in near_expiry_phugiagiavi %}
+                            <span class="text-danger">Gần hết hạn!</span>
+                            {% else %}
+                            <span class="text-success">An toàn</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <button class="btn btn-secondary mt-3" onclick="goBack()">Trở về</button>
+
 </div>
-</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
 {% endblock %}
+

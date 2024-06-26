@@ -18,7 +18,8 @@
                         <th>Tên Phụ Gia</th>
                         <th>Mô Tả</th>
                         <th>Đơn Vị Tính</th>
-                        <th>Số Lượng Tồn Kho</th>
+                        <th>Số Lượng Nhập</th>
+                        <th>Ngày Nhập</th>
                         <th>Ngày Hết Hạn</th>
                         <th>Hành Động</th>
                     </tr>
@@ -30,7 +31,9 @@
                         <td>{{ item.MoTa }}</td>
                         <td>{{ item.DonViTinh }}</td>
                         <td>{{ item.SoLuongTonKho | int }}</td>
-                        <td>{{ item.NgayHetHan }}</td>
+                        <td>{{ item.NgayNhap.strftime('%d-%m-%Y') if item.NgayNhap else '' }}</td>
+                        <td>{{ item.NgayHetHan.strftime('%d-%m-%Y') if item.NgayHetHan else '' }}</td>
+
                         <td>
                             {% if session['Quyen'] == 'Admin'
                             %}

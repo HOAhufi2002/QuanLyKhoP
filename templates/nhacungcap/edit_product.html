@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Sửa Giá Sản Phẩm và Tên Nguyên Liệu</h1>
+<form method="POST" action="{{ url_for('nhacungcap.edit_product', id=nhacungcap_id, nguyenlieu_id=nguyenlieu_id) }}">
+    <div class="form-group">
+        <label for="tennguyenlieu">Tên Nguyên Liệu</label>
+        <input type="text" name="tennguyenlieu" class="form-control" value="{{ nguyenlieu.TenNguyenLieu }}" required>
+    </div>
+    <div class="form-group">
+        <label for="price">Giá</label>
+        <input type="number" step="0.01" name="price" class="form-control" value="{{ product.Price | int}}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Lưu</button>
+</form>
+<button class="btn btn-secondary mt-3" onclick="goBack()">Trở về</button>
+
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+    </script>
+{% endblock %}

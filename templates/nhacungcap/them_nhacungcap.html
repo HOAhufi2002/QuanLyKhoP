@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Thêm nhà cung cấp</h1>
+</div>
+
+<form method="POST" action="{{ url_for('nhacungcap.add_nhacungcap') }}">
+    <div class="form-group">
+        <label for="TenNhaCungCap">Tên nhà cung cấp</label>
+        <input type="text" class="form-control" id="TenNhaCungCap" name="TenNhaCungCap" required>
+    </div>
+    <div class="form-group">
+        <label for="DiaChi">Địa chỉ</label>
+        <input type="text" class="form-control" id="DiaChi" name="DiaChi" required>
+    </div>
+    <div class="form-group">
+        <label for="SoDienThoai">Số điện thoại</label>
+        <input type="text" class="form-control" id="SoDienThoai" name="SoDienThoai" required>
+    </div>
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" required>
+    </div>
+    <div class="form-group">
+        <label for="LoaiNguyenLieu">Loại nguyên liệu</label>
+        <input type="text" class="form-control" id="LoaiNguyenLieu" name="LoaiNguyenLieu" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Thêm</button>
+</form>
+{% endblock %}
