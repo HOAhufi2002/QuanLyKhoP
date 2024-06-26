@@ -55,26 +55,46 @@
                 Quản lý
             </div>
             <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('quanlynguyenlieuphugia.quanly_nguyenlieu') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Quản Lý Nguyên Liệu</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ url_for('quanlynguyenlieuphugia.quanly_phugia') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Quản Lý Phụ Gia</span>
+                </a>
+            </li>
+            
+            <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('nguyenlieu.quanlynguyenlieupho') }}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
 
-                    <span>QUẢN LÝ NGUYÊN LIỆU</span>
+                    <span>NHẬP NGUYÊN LIỆU</span>
                 </a>
             </li>
-            
-            
             <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('phugiagiavi.quanlyphugiagiavi') }}">
                     <i class="fas fa-fw fa-pepper-hot"></i>
-                    <span>QUẢN LÝ PHỤ GIA </span>
+                    <span>NHẬP PHỤ GIA </span>
                 </a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('nuocdung.quanly_nuocdung') }}">
-                    <i class="fas fa-fw fa-utensils"></i>
-                    <span>QUẢN LÝ CÔNG THỨC</span>
-                </a>
-            </li>
+                    <!-- Thêm vào sidebar hoặc navigation bar -->
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('nguyenlieu.xuat_kho_nguyenlieu') }}">
+                <i class="fas fa-fw fa-box"></i>
+                <span>XUẤT KHO NGUYÊN LIỆU</span>
+            </a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="{{ url_for('phugiagiavi.xuat_kho_phugia') }}">
+                <i class="fas fa-fw fa-box"></i>
+                <span>XUẤT KHO PHỤ GIA</span>
+            </a>
+        </li>
+    
+
             <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('tonkho.quanly_tonkho') }}">
                     <i class="fas fa-fw fa-warehouse"></i>
@@ -94,31 +114,14 @@
                     <span>QUẢN LÝ NCC</span>
                 </a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ url_for('thucdon.quanly_thucdon') }}">
-                    <i class="fas fa-fw fa-clipboard-list"></i>
-                    <span>QUẢN LÝ THỰC ĐƠN</span>
-                </a>
-            </li>
+       
             <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('baocao.quanly_baocao') }}">
                     <i class="fas fa-fw fa-chart-bar"></i>
                     <span>REPORT ANALYTICS</span>
                 </a>
             </li>
-            <!-- Thêm vào sidebar hoặc navigation bar -->
-<li class="nav-item">
-    <a class="nav-link" href="{{ url_for('nguyenlieu.xuat_kho_nguyenlieu') }}">
-        <i class="fas fa-fw fa-box"></i>
-        <span>Xuất Kho Nguyên Liệu</span>
-    </a>
-</li>
-<li class="nav-item">
-    <a class="nav-link" href="{{ url_for('phugiagiavi.xuat_kho_phugia') }}">
-        <i class="fas fa-fw fa-box"></i>
-        <span>Xuất Kho Phụ Gia</span>
-    </a>
-</li>
+    
 
             <li class="nav-item active">
                 <a class="nav-link" href="{{ url_for('loginregister.account_management') }}">
@@ -319,7 +322,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>Copyright &copy; Website Nghĩa Lê </span>
                     </div>
                 </div>
             </footer>

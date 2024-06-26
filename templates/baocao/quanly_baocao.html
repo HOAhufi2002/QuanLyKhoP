@@ -18,10 +18,18 @@
 {% if data_nguyenlieu or data_phugia %}
 <h2>Kết quả thống kê</h2>
 <div>
-    <img src="{{ url_for('plot_png', start_date=start_date, end_date=end_date) }}" alt="Biểu đồ nhập xuất nguyên liệu và phụ gia">
+    <h3>Biểu đồ nhập xuất nguyên liệu</h3>
+    <img src="{{ url_for('plot_nguyenlieu_png', start_date=start_date, end_date=end_date) }}" alt="Biểu đồ nhập xuất nguyên liệu">
 </div>
-<table class="table table-bordered mt-3">
-    <thead>
+<div>
+    <h3>Biểu đồ nhập xuất phụ gia</h3>
+    <img src="{{ url_for('plot_phugia_png', start_date=start_date, end_date=end_date) }}" alt="Biểu đồ nhập xuất phụ gia">
+</div>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
         <tr>
             <th>Tên</th>
             <th>Tổng nhập</th>
@@ -45,5 +53,6 @@
         {% endfor %}
     </tbody>
 </table>
+</div>
 {% endif %}
 {% endblock %}

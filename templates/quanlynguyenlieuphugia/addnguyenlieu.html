@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Thêm Nguyên Liệu</h1>
+<form method="POST" action="{{ url_for('quanlynguyenlieuphugia.add_nguyenlieu') }}">
+    <div class="form-group">
+        <label for="TenNguyenLieu">Tên Nguyên Liệu</label>
+        <input type="text" class="form-control" id="TenNguyenLieu" name="TenNguyenLieu" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Thêm</button>
+</form>
+{% endblock %}

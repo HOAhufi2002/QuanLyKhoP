@@ -6,8 +6,11 @@
     <form method="POST" action="{{ url_for('phugiagiavi.add_phugiagiavi') }}">
         <div class="form-group">
             <label for="TenPhuGia">Tên Phụ Gia:</label>
-            <input type="text" class="form-control" name="TenPhuGia" required>
-        </div>
+            <select class="form-control" id="TenPhuGia" name="TenPhuGia" required>
+                {% for pg in quanly_phugia %}
+                <option value="{{ pg.TenPhuGia }}">{{ pg.TenPhuGia }}</option>
+                {% endfor %}
+            </select>        </div>
         <div class="form-group">
             <label for="MoTa">Mô Tả:</label>
             <input type="text" class="form-control" name="MoTa">
