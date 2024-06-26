@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 # Cấu hình kết nối với SQL Server
-connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=minhhoa;DATABASE=quanlykhopho;UID=sa;PWD=123"
+connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=Hiep\\SQLEXPRESS;DATABASE=quanlykhopho;Trusted_Connection=yes;"
 conn = pyodbc.connect(connection_string)
 from thucdon import thucdon_bp
 app.register_blueprint(thucdon_bp, url_prefix='/thucdon')

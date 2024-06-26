@@ -3,7 +3,7 @@ import pyodbc
 
 thucdon_bp = Blueprint('thucdon', __name__, template_folder='templates')
 
-connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=minhhoa;DATABASE=quanlykhopho;UID=sa;PWD=123"
+connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=Hiep\\SQLEXPRESS;DATABASE=quanlykhopho;Trusted_Connection=yes;"
 
 @thucdon_bp.route('/thucdon')
 def quanly_thucdon():

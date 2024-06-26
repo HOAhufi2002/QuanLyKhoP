@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 import pyodbc
 
-connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=minhhoa;DATABASE=quanlykhopho;UID=sa;PWD=123"
+connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=Hiep\\SQLEXPRESS;DATABASE=quanlykhopho;Trusted_Connection=yes;"
 conn = pyodbc.connect(connection_string)
 
 nguyenlieu_bp = Blueprint('nguyenlieu', __name__, template_folder='templates/nguyenlieu')
