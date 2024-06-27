@@ -1,58 +1,99 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h1>Thống kê nhập xuất nguyên liệu và phụ gia</h1>
+<h1>Thống Kê Tỷ Lệ Nhập Xuất</h1>
 
-<form method="GET" action="{{ url_for('thong_ke') }}">
-    <div class="form-group">
-        <label for="start_date">Ngày bắt đầu:</label>
-        <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}">
+<form method="get" action="{{ url_for('thong_ke') }}">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="start_date">Ngày Bắt Đầu:</label>
+            <input type="date" class="form-control" id="start_date" name="start_date" value="{{ start_date }}">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="end_date">Ngày Kết Thúc:</label>
+            <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
+        </div>
     </div>
     <div class="form-group">
-        <label for="end_date">Ngày kết thúc:</label>
-        <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
+        <label for="tennguyenlieu">Tên Nguyên Liệu:</label>
+        <input type="text" class="form-control" id="tennguyenlieu" name="tennguyenlieu" value="{{ request.args.get('tennguyenlieu', '') }}">
     </div>
-    <button type="submit" class="btn btn-primary">Thống kê</button>
+    <div class="form-group">
+        <label for="tenphugia">Tên Phụ Gia:</label>
+        <input type="text" class="form-control" id="tenphugia" name="tenphugia" value="{{ request.args.get('tenphugia', '') }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Xem Thống Kê</button>
 </form>
 
 {% if data_nguyenlieu or data_phugia %}
-<h2>Kết quả thống kê</h2>
-<div>
-    <h3>Biểu đồ nhập xuất nguyên liệu</h3>
-    <img src="{{ url_for('plot_nguyenlieu_png', start_date=start_date, end_date=end_date) }}" alt="Biểu đồ nhập xuất nguyên liệu">
+<hr />
+<div class="row">
+    <div class="col-lg-6 col-md-12">
+        <h3>Biểu đồ nhập xuất nguyên liệu</h3>
+        <img src="{{ url_for('plot_nguyenlieu_png', start_date=start_date, end_date=end_date, tennguyenlieu=request.args.get('tennguyenlieu', '')) }}" alt="Biểu đồ nhập xuất nguyên liệu" class="img-fluid">
+    </div>
+    <div class="col-lg-6 col-md-12">
+        <h3>Biểu đồ nhập xuất phụ gia</h3>
+        <img src="{{ url_for('plot_phugia_png', start_date=start_date, end_date=end_date, tenphugia=request.args.get('tenphugia', '')) }}" alt="Biểu đồ nhập xuất phụ gia" class="img-fluid">
+    </div>
 </div>
-<div>
-    <h3>Biểu đồ nhập xuất phụ gia</h3>
-    <img src="{{ url_for('plot_phugia_png', start_date=start_date, end_date=end_date) }}" alt="Biểu đồ nhập xuất phụ gia">
-</div>
-<div class="card shadow mb-4">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-        <tr>
-            <th>Tên</th>
-            <th>Tổng nhập</th>
-            <th>Tổng xuất</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for row in data_nguyenlieu %}
-        <tr>
-            <td>{{ row.TenNguyenLieu }}</td>
-            <td>{{ row.TotalNhap }}</td>
-            <td>{{ row.TotalXuat }}</td>
-        </tr>
-        {% endfor %}
-        {% for row in data_phugia %}
-        <tr>
-            <td>{{ row.TenPhuGia }}</td>
-            <td>{{ row.TotalNhap }}</td>
-            <td>{{ row.TotalXuat }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+<div class="table-responsive mt-4">
+    <h3>Thống kê Nguyên Liệu</h3>
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Tên Nguyên Liệu</th>
+                <th>Tổng Nhập</th>
+                <th>Tổng Xuất</th>
+                <th>Tỷ Lệ Nhập Xuất</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data_nguyenlieu %}
+            <tr>
+                <td>{{ row.TenNguyenLieu }}</td>
+                <td>{{ row.TotalNhap or 0 }}</td>
+                <td>{{ row.TotalXuat or 0 }}</td>
+                <td>
+                    {% if row.TotalNhap and row.TotalXuat %}
+                    {{ (row.TotalXuat / row.TotalNhap) | round(2) }}
+                    {% else %}
+                    N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Thống kê Phụ Gia</h3>
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Tên Phụ Gia</th>
+                <th>Tổng Nhập</th>
+                <th>Tổng Xuất</th>
+                <th>Tỷ Lệ Nhập Xuất</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data_phugia %}
+            <tr>
+                <td>{{ row.TenPhuGia }}</td>
+                <td>{{ row.TotalNhap or 0 }}</td>
+                <td>{{ row.TotalXuat or 0 }}</td>
+                <td>
+                    {% if row.TotalNhap and row.TotalXuat %}
+                    {{ (row.TotalXuat / row.TotalNhap) | round(2) }}
+                    {% else %}
+                    N/A
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endif %}
 {% endblock %}
