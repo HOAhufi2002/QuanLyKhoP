@@ -32,7 +32,7 @@ def add_phugiagiavi():
         TenPhuGia = request.form['TenPhuGia']
         MoTa = request.form['MoTa']
         DonViTinh = request.form['DonViTinh']
-        SoLuongTonKho = int(request.form['SoLuongTonKho'])
+        SoLuongTonKho = float(request.form['SoLuongTonKho'])
         NgayNhap = request.form['NgayNhap']
         NgayHetHan = request.form['NgayHetHan']
 
@@ -58,7 +58,12 @@ def add_phugiagiavi():
         conn.commit()
         cursor.close()
         return redirect(url_for('phugiagiavi.quanlyphugiagiavi'))
-    return render_template('add_phugiagiavi.html')
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM QuanLyPhuGia")
+    quanly_phugia = cursor.fetchall()
+    cursor.close()
+    return render_template('add_phugiagiavi.html', quanly_phugia=quanly_phugia)
 
 @phugiagiavi_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_phugiagiavi(id):

@@ -102,7 +102,7 @@ def details_nhacungcap(id):
     """, (id,))
     products = cursor.fetchall()
 
-    cursor.execute("SELECT ID, TenNguyenLieu FROM NguyenLieuPhoBo")
+    cursor.execute("SELECT MIN(ID) AS ID, TenNguyenLieu FROM NguyenLieuPhoBo GROUP BY TenNguyenLieu;")
     all_nguyenlieu = cursor.fetchall()
 
     conn.close()

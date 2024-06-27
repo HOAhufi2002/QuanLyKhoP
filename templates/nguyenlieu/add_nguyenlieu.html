@@ -6,8 +6,11 @@
     <form method="POST" action="{{ url_for('nguyenlieu.add_nguyenlieu') }}">
         <div class="form-group">
             <label for="TenNguyenLieu">Tên Nguyên Liệu:</label>
-            <input type="text" class="form-control" name="TenNguyenLieu" required>
-        </div>
+            <select class="form-control" id="TenNguyenLieu" name="TenNguyenLieu" required>
+                {% for nl in quanly_nguyenlieu %}
+                <option value="{{ nl.TenNguyenLieu }}">{{ nl.TenNguyenLieu }}</option>
+                {% endfor %}
+            </select>        </div>
         <div class="form-group">
             <label for="MoTa">Mô Tả:</label>
             <input type="text" class="form-control" name="MoTa">

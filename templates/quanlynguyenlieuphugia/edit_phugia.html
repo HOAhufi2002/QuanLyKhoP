@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Sửa Phụ Gia</h1>
+<form method="POST" action="{{ url_for('quanlynguyenlieuphugia.edit_phugia', id=phugia.id) }}">
+    <div class="form-group">
+        <label for="TenPhuGia">Tên Phụ Gia</label>
+        <input type="text" class="form-control" id="TenPhuGia" name="TenPhuGia" value="{{ phugia.TenPhuGia }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Cập Nhật</button>
+</form>
+{% endblock %}

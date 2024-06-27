@@ -27,6 +27,7 @@ def quanlynguyenlieupho():
     return render_template('quanlynguyenlieupho.html', nguyenlieu=nguyenlieu)
 
 @nguyenlieu_bp.route('/add', methods=['GET', 'POST'])
+@nguyenlieu_bp.route('/add', methods=['GET', 'POST'])
 def add_nguyenlieu():
     if request.method == 'POST':
         TenNguyenLieu = request.form['TenNguyenLieu']
@@ -58,7 +59,12 @@ def add_nguyenlieu():
         conn.commit()
         cursor.close()
         return redirect(url_for('nguyenlieu.quanlynguyenlieupho'))
-    return render_template('add_nguyenlieu.html')
+    
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM QuanLyNguyenLieu")
+    quanly_nguyenlieu = cursor.fetchall()
+    cursor.close()
+    return render_template('add_nguyenlieu.html', quanly_nguyenlieu=quanly_nguyenlieu)
 
 @nguyenlieu_bp.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_nguyenlieu(id):
@@ -154,11 +160,6 @@ def get_xuat_kho_nguyenlieu():
     """)
     rows = cursor.fetchall()
     cursor.close()
-    
-    # In dữ liệu ra console
-    print("Dữ liệu từ get_xuat_kho_nguyenlieu:")
-    for row in rows:
-        print(row)
     
     return rows
 
