@@ -3,8 +3,10 @@ import pyodbc
 import matplotlib.pyplot as plt
 import seaborn as sns
 import json
-
+import pandas as pd
 import io
+from io import BytesIO
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -36,6 +38,50 @@ app.register_blueprint(nhacungcap_bp, url_prefix='/nhacungcap')
 
 from quanlynguyenlieuphugia import quanlynguyenlieuphugia_bp
 app.register_blueprint(quanlynguyenlieuphugia_bp, url_prefix='/quanlynguyenlieuphugia')
+@app.route('/generate_report')
+def generate_report():
+    # Connect to your database
+    conn = pyodbc.connect(connection_string)
+    
+    # Query for NguyenLieuPhoBo
+    query_1 = """
+SELECT TenNguyenLieu,mota,donvitinh,SoLuongTonKho
+FROM NguyenLieuPhoBo
+WHERE ID IN (
+    SELECT MIN(ID)
+    FROM NguyenLieuPhoBo
+    GROUP BY TenNguyenLieu
+);
+    """
+    df_1 = pd.read_sql(query_1, conn)
+    
+    # Query for PhuGiaGiaVi
+    query_2 = """
+SELECT Tenphugia,mota,donvitinh,SoLuongTonKho
+FROM PhuGiaGiaVi
+WHERE ID IN (
+    SELECT MIN(ID)
+    FROM PhuGiaGiaVi
+    GROUP BY tenphugia
+);
+
+    """
+    df_2 = pd.read_sql(query_2, conn)
+    
+    conn.close()
+    
+    # Create a BytesIO buffer to hold the Excel data
+    output = BytesIO()
+    
+    # Write the data to an Excel file in memory
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df_1.to_excel(writer, sheet_name='NguyenLieuPhoBo', index=False)
+        df_2.to_excel(writer, sheet_name='PhuGiaGiaVi', index=False)
+    
+    output.seek(0)
+    
+    # Send the Excel file to the client
+    return send_file(output, download_name="report.xlsx", as_attachment=True)
 
 @app.route('/')
 def index():
@@ -45,11 +91,11 @@ def index():
     cursor = conn.cursor()
 
     # Tổng hợp số lượng nguyên liệu
-    cursor.execute("SELECT COUNT(*) FROM NguyenLieuPhoBo")
+    cursor.execute("SELECT COUNT(DISTINCT TenNguyenLieu)  FROM NguyenLieuPhoBo")
     total_ingredients = cursor.fetchone()[0]
 
     # Tổng hợp số lượng món ăn
-    cursor.execute("SELECT COUNT(*) FROM MonAn")
+    cursor.execute("SELECT COUNT(DISTINCT TenPhuGia)  FROM phugiagiavi")
     total_dishes = cursor.fetchone()[0]
 
     # Tổng hợp số lượng nhà cung cấp
