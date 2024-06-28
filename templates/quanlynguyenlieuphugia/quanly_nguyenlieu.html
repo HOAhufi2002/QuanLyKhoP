@@ -12,7 +12,6 @@
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                 <thead>
         <tr>
-            <th>ID</th>
             <th>Tên Nguyên Liệu</th>
             <th>Hành Động</th>
         </tr>
@@ -20,7 +19,6 @@
     <tbody>
         {% for item in nguyenlieu %}
         <tr>
-            <td>{{ item.id }}</td>
             <td>{{ item.TenNguyenLieu }}</td>
             <td>
                 <a href="{{ url_for('quanlynguyenlieuphugia.delete_nguyenlieu', id=item.id) }}" class="btn btn-danger">Xóa</a>

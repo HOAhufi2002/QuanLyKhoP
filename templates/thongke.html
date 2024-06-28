@@ -12,22 +12,45 @@
         <label for="end_date">Ngày Kết Thúc:</label>
         <input type="date" class="form-control" id="end_date" name="end_date" value="{{ end_date }}">
     </div>
+    <div class="form-group">
+        <label for="tennguyenlieu">Tên Nguyên Liệu:</label>
+        <select class="form-control" id="tennguyenlieu" name="tennguyenlieu">
+            <option value="">Chọn Nguyên Liệu</option>
+            {% for item in nguyenlieu_list %}
+            <option value="{{ item }}" {% if item == tennguyenlieu %}selected{% endif %}>{{ item }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="tenphugia">Tên Phụ Gia:</label>
+        <select class="form-control" id="tenphugia" name="tenphugia">
+            <option value="">Chọn Phụ Gia</option>
+            {% for item in phugia_list %}
+            <option value="{{ item }}" {% if item == tenphugia %}selected{% endif %}>{{ item }}</option>
+            {% endfor %}
+        </select>
+    </div>
     <button type="submit" class="btn btn-primary">Xem Thống Kê</button>
 </form>
 
 {% if data_nguyenlieu or data_phugia %}
 <h2>Kết quả thống kê</h2>
 
-<h3>Biểu đồ nhập xuất nguyên liệu</h3>
-<img src="{{ url_for('plot_nguyenlieu_png', start_date=start_date, end_date=end_date) }}" alt="Biểu đồ nhập xuất nguyên liệu">
-
-<h3>Biểu đồ nhập xuất phụ gia</h3>
-<img src="{{ url_for('plot_phugia_png', start_date=start_date, end_date=end_date) }}" alt="Biểu đồ nhập xuất phụ gia">
+<div class="row">
+    <div class="col-md-6">
+        <h3>Biểu đồ nhập xuất nguyên liệu</h3>
+        <canvas id="nguyenlieuChart"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h3>Biểu đồ nhập xuất phụ gia</h3>
+        <canvas id="phugiaChart"></canvas>
+    </div>
+</div>
 
 <div class="table-responsive mt-4">
     <h3>Thống kê Nguyên Liệu</h3>
-    <table class="table table-bordered" width="100%" cellspacing="0">
-        <thead>
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
             <tr>
                 <th>Tên Nguyên Liệu</th>
                 <th>Tổng Nhập</th>
@@ -54,8 +77,8 @@
     </table>
 
     <h3>Thống kê Phụ Gia</h3>
-    <table class="table table-bordered" width="100%" cellspacing="0">
-        <thead>
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
             <tr>
                 <th>Tên Phụ Gia</th>
                 <th>Tổng Nhập</th>
@@ -82,4 +105,71 @@
     </table>
 </div>
 {% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const nguyenlieuLabels = {{ nguyenlieu_labels | safe }};
+    const nguyenlieuDataNhap = {{ nguyenlieu_data_nhap | safe }};
+    const nguyenlieuDataXuat = {{ nguyenlieu_data_xuat | safe }};
+    const phugiaLabels = {{ phugia_labels | safe }};
+    const phugiaDataNhap = {{ phugia_data_nhap | safe }};
+    const phugiaDataXuat = {{ phugia_data_xuat | safe }};
+
+    const ctxNguyenlieu = document.getElementById('nguyenlieuChart').getContext('2d');
+    const ctxPhugia = document.getElementById('phugiaChart').getContext('2d');
+
+    const nguyenlieuChart = new Chart(ctxNguyenlieu, {
+        type: 'bar',
+        data: {
+            labels: JSON.parse(nguyenlieuLabels),
+            datasets: [
+                {
+                    label: 'Tổng Nhập',
+                    data: JSON.parse(nguyenlieuDataNhap),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                },
+                {
+                    label: 'Tổng Xuất',
+                    data: JSON.parse(nguyenlieuDataXuat),
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const phugiaChart = new Chart(ctxPhugia, {
+        type: 'bar',
+        data: {
+            labels: JSON.parse(phugiaLabels),
+            datasets: [
+                {
+                    label: 'Tổng Nhập',
+                    data: JSON.parse(phugiaDataNhap),
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                },
+                {
+                    label: 'Tổng Xuất',
+                    data: JSON.parse(phugiaDataXuat),
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}
