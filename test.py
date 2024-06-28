@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 tonkho_bp = Blueprint('tonkho', __name__, template_folder='templates/tonkho')
 
-connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=minhhoa;DATABASE=quanlykhopho;UID=sa;PWD=123"
+connection_string = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=Hiep\\SQLEXPRESS;DATABASE=quanlykhopho;Trusted_Connection=yes;"
 
 @tonkho_bp.route('/')
 def quanly_tonkho():
