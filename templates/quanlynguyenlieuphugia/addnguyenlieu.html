@@ -2,6 +2,27 @@
 
 {% block content %}
 <h1>Thêm Nguyên Liệu</h1>
+
+<!-- Display Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                {% for category, message in messages %}
+                    var alertBox = document.createElement('div');
+                    alertBox.className = 'alert {{ "alert-success" if category == "success" else "alert-error" }}';
+                    alertBox.innerHTML = `
+                        <span class="icon">{{ '✔' if category == "success" else '!' }}</span>
+                        <span>{{ message }}</span>
+                        <button class="close" onclick="this.parentElement.style.display='none';">&times;</button>
+                    `;
+                    document.body.prepend(alertBox);
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
+{% endwith %}
+
 <form method="POST" action="{{ url_for('quanlynguyenlieuphugia.add_nguyenlieu') }}">
     <div class="form-group">
         <label for="TenNguyenLieu">Tên Nguyên Liệu</label>

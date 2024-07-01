@@ -87,46 +87,66 @@ WHERE ID IN (
 def index():
     if 'user_id' not in session:
         return redirect(url_for('loginregister.login'))
-    
+
+    conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()
 
     # Tổng hợp số lượng nguyên liệu
-    cursor.execute("SELECT COUNT(DISTINCT TenNguyenLieu)  FROM NguyenLieuPhoBo")
+    cursor.execute("SELECT COUNT(DISTINCT TenNguyenLieu) FROM NguyenLieuPhoBo")
     total_ingredients = cursor.fetchone()[0]
 
     # Tổng hợp số lượng món ăn
-    cursor.execute("SELECT COUNT(DISTINCT TenPhuGia)  FROM phugiagiavi")
+    cursor.execute("SELECT COUNT(DISTINCT TenPhuGia) FROM PhuGiaGiaVi")
     total_dishes = cursor.fetchone()[0]
 
     # Tổng hợp số lượng nhà cung cấp
     cursor.execute("SELECT COUNT(*) FROM NhaCungCap")
     total_suppliers = cursor.fetchone()[0]
 
-    # Lấy thông tin nguyên liệu và phụ gia
+    # Lấy thông tin nguyên liệu
     cursor.execute("""
         SELECT TenNguyenLieu, SUM(SoLuongTonKho) AS SoLuongTonKho, DonViTinh
-        FROM (
-            SELECT TenNguyenLieu, SoLuongTonKho, DonViTinh FROM NguyenLieuPhoBo
-            UNION ALL
-            SELECT TenPhuGia AS TenNguyenLieu, SoLuongTonKho, DonViTinh FROM PhuGiaGiaVi
-        ) AS Combined
+        FROM NguyenLieuPhoBo
         GROUP BY TenNguyenLieu, DonViTinh
     """)
-    combined_ingredients = cursor.fetchall()
+    ingredients = cursor.fetchall()
+    ingredient_names = [row[0] for row in ingredients]
+    ingredient_stock_levels = [row[1] for row in ingredients]
 
-    # Tên nguyên liệu và mức tồn kho
-    ingredient_names = [row.TenNguyenLieu for row in combined_ingredients]
-    ingredient_stock_levels = [row.SoLuongTonKho for row in combined_ingredients]
+    # Lấy thông tin phụ gia
+    cursor.execute("""
+        SELECT TenPhuGia AS TenNguyenLieu, SUM(SoLuongTonKho) AS SoLuongTonKho, DonViTinh
+        FROM PhuGiaGiaVi
+        GROUP BY TenPhuGia, DonViTinh
+    """)
+    additives = cursor.fetchall()
+    additive_names = [row[0] for row in additives]
+    additive_stock_levels = [row[1] for row in additives]
 
     # Lấy thông tin nhà cung cấp
-    cursor.execute("SELECT TenNhaCungCap, COUNT(*) FROM NhaCungCap_NguyenLieu JOIN NhaCungCap ON NhaCungCap.ID = NhaCungCap_NguyenLieu.NhaCungCapID GROUP BY TenNhaCungCap")
+    cursor.execute("""
+        SELECT TenNhaCungCap, COUNT(*)
+        FROM NhaCungCap_NguyenLieu
+        JOIN NhaCungCap ON NhaCungCap.ID = NhaCungCap_NguyenLieu.NhaCungCapID
+        GROUP BY TenNhaCungCap
+    """)
     suppliers = cursor.fetchall()
     supplier_names = [row[0] for row in suppliers]
     ingredients_by_supplier = [row[1] for row in suppliers]
 
     cursor.close()
+    conn.close()
 
-    return render_template('index.html', total_ingredients=total_ingredients, total_dishes=total_dishes, total_suppliers=total_suppliers, ingredient_names=ingredient_names, ingredient_stock_levels=ingredient_stock_levels, supplier_names=supplier_names, ingredients_by_supplier=ingredients_by_supplier)
+    return render_template(
+        'index.html',
+        total_ingredients=total_ingredients,
+        total_dishes=total_dishes,
+        total_suppliers=total_suppliers,
+        ingredient_data={'names': ingredient_names, 'stock_levels': ingredient_stock_levels},
+        additive_data={'names': additive_names, 'stock_levels': additive_stock_levels},
+        supplier_names=supplier_names,
+        ingredients_by_supplier=ingredients_by_supplier
+    )
 def fetch_data_nguyenlieu(start_date, end_date, tennguyenlieu=None):
     conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()
