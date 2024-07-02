@@ -85,10 +85,10 @@ WHERE ID IN (
 
 @app.route('/')
 def index():
+    
     if 'user_id' not in session:
         return redirect(url_for('loginregister.login'))
-
-    conn = pyodbc.connect(connection_string)
+    
     cursor = conn.cursor()
 
     # Tổng hợp số lượng nguyên liệu
@@ -109,25 +109,29 @@ def index():
         FROM NguyenLieuPhoBo
         GROUP BY TenNguyenLieu, DonViTinh
     """)
-    ingredients = cursor.fetchall()
-    ingredient_names = [row[0] for row in ingredients]
-    ingredient_stock_levels = [row[1] for row in ingredients]
+    nguyenlieu_phobo = cursor.fetchall()
 
     # Lấy thông tin phụ gia
     cursor.execute("""
-        SELECT TenPhuGia AS TenNguyenLieu, SUM(SoLuongTonKho) AS SoLuongTonKho, DonViTinh
+        SELECT TenPhuGia, SUM(SoLuongTonKho) AS SoLuongTonKho, DonViTinh
         FROM PhuGiaGiaVi
         GROUP BY TenPhuGia, DonViTinh
     """)
-    additives = cursor.fetchall()
-    additive_names = [row[0] for row in additives]
-    additive_stock_levels = [row[1] for row in additives]
+    phugiagiavi = cursor.fetchall()
+
+    # Chuyển đổi kết quả truy vấn thành danh sách các tên nguyên liệu và mức tồn kho
+    pho_ingredient_names = [row[0] for row in nguyenlieu_phobo]
+    pho_ingredient_stock_levels = [row[1] for row in nguyenlieu_phobo]
+
+    # Chuyển đổi kết quả truy vấn thành danh sách các tên phụ gia và mức tồn kho
+    gia_vi_names = [row[0] for row in phugiagiavi]
+    gia_vi_stock_levels = [row[1] for row in phugiagiavi]
 
     # Lấy thông tin nhà cung cấp
     cursor.execute("""
-        SELECT TenNhaCungCap, COUNT(*)
-        FROM NhaCungCap_NguyenLieu
-        JOIN NhaCungCap ON NhaCungCap.ID = NhaCungCap_NguyenLieu.NhaCungCapID
+        SELECT TenNhaCungCap, COUNT(*) 
+        FROM NhaCungCap_NguyenLieu 
+        JOIN NhaCungCap ON NhaCungCap.ID = NhaCungCap_NguyenLieu.NhaCungCapID 
         GROUP BY TenNhaCungCap
     """)
     suppliers = cursor.fetchall()
@@ -135,18 +139,20 @@ def index():
     ingredients_by_supplier = [row[1] for row in suppliers]
 
     cursor.close()
-    conn.close()
 
-    return render_template(
-        'index.html',
-        total_ingredients=total_ingredients,
-        total_dishes=total_dishes,
-        total_suppliers=total_suppliers,
-        ingredient_data={'names': ingredient_names, 'stock_levels': ingredient_stock_levels},
-        additive_data={'names': additive_names, 'stock_levels': additive_stock_levels},
-        supplier_names=supplier_names,
-        ingredients_by_supplier=ingredients_by_supplier
-    )
+    return render_template('index.html', 
+                           total_ingredients=total_ingredients, 
+                           total_dishes=total_dishes, 
+                           total_suppliers=total_suppliers, 
+                           pho_ingredient_names=pho_ingredient_names, 
+                           pho_ingredient_stock_levels=pho_ingredient_stock_levels,
+                           gia_vi_names=gia_vi_names,
+                           gia_vi_stock_levels=gia_vi_stock_levels,
+                           supplier_names=supplier_names, 
+                           ingredients_by_supplier=ingredients_by_supplier)
+
+
+
 def fetch_data_nguyenlieu(start_date, end_date, tennguyenlieu=None):
     conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()

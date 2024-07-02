@@ -1,12 +1,22 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<script>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                alert("{{ message['title'] }}\n{{ message['body'] }}");
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</script>
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     <a href="{{ url_for('generate_report') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
         <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
     </a>
 </div>
+
 <!-- Welcome Message Row -->
 <div class="row">
     <div class="col-lg-12 mb-4">
@@ -20,6 +30,7 @@
         </div>
     </div>
 </div>
+
 <!-- Content Row -->
 <div class="row">
     <!-- Card Example -->
@@ -38,6 +49,7 @@
             </div>
         </div>
     </div>
+
     <!-- Card Example -->
     <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
@@ -54,6 +66,7 @@
             </div>
         </div>
     </div>
+
     <!-- Card Example -->
     <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
@@ -74,23 +87,26 @@
 
 <!-- Charts Row -->
 <div class="row">
+    <!-- Ingredient Stock Levels Chart -->
     <div class="col-lg-6 mb-4">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Ingredient Stock Levels</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Pho Bo Ingredient Stock Levels</h6>
             </div>
             <div class="card-body">
-                <canvas id="ingredientStockLevelsChart"></canvas>
+                <canvas id="phoStockLevelsChart"></canvas>
             </div>
         </div>
     </div>
+
+    <!-- Spices and Additives Stock Levels Chart -->
     <div class="col-lg-6 mb-4">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">Additive Stock Levels</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Spices and Additives Stock Levels</h6>
             </div>
             <div class="card-body">
-                <canvas id="additiveStockLevelsChart"></canvas>
+                <canvas id="spicesStockLevelsChart"></canvas>
             </div>
         </div>
     </div>
@@ -98,20 +114,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ingredientStockLevelsChartCtx = document.getElementById('ingredientStockLevelsChart').getContext('2d');
-    const additiveStockLevelsChartCtx = document.getElementById('additiveStockLevelsChart').getContext('2d');
-
-    // Separate the data for ingredients and additives
-    const ingredientData = {{ ingredient_data|tojson }};
-    const additiveData = {{ additive_data|tojson }};
-
-    const ingredientStockLevelsChart = new Chart(ingredientStockLevelsChartCtx, {
+    const phoStockLevelsChartCtx = document.getElementById('phoStockLevelsChart').getContext('2d');
+    const phoStockLevelsChart = new Chart(phoStockLevelsChartCtx, {
         type: 'bar',
         data: {
-            labels: ingredientData.names,
+            labels: {{ pho_ingredient_names|safe }},
             datasets: [{
                 label: 'Stock Levels',
-                data: ingredientData.stock_levels,
+                data: {{ pho_ingredient_stock_levels|safe }},
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -126,15 +136,16 @@
         }
     });
 
-    const additiveStockLevelsChart = new Chart(additiveStockLevelsChartCtx, {
+    const spicesStockLevelsChartCtx = document.getElementById('spicesStockLevelsChart').getContext('2d');
+    const spicesStockLevelsChart = new Chart(spicesStockLevelsChartCtx, {
         type: 'bar',
         data: {
-            labels: additiveData.names,
+            labels: {{ gia_vi_names|safe }},
             datasets: [{
                 label: 'Stock Levels',
-                data: additiveData.stock_levels,
-                backgroundColor: 'rgba(255, 159, 64, 0.2)',
-                borderColor: 'rgba(255, 159, 64, 1)',
+                data: {{ gia_vi_stock_levels|safe }},
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1
             }]
         },
@@ -146,5 +157,13 @@
             }
         }
     });
+        // Script to hide alerts after 5 seconds
+    window.setTimeout(function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            alert.classList.remove('show');
+            alert.classList.add('fade');
+        });
+    }, -1);
 </script>
 {% endblock %}
