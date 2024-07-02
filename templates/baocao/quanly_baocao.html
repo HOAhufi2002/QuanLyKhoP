@@ -129,11 +129,11 @@
 <div class="row">
     <div class="col-lg-6 col-md-12">
         <h3>Biểu đồ nhập xuất nguyên liệu</h3>
-        <img src="{{ url_for('plot_nguyenlieu_png', start_date=start_date, end_date=end_date, tennguyenlieu=request.args.get('tennguyenlieu', '')) }}" alt="Biểu đồ nhập xuất nguyên liệu" class="img-fluid">
+        <img src="data:image/png;base64,{{ nguyenlieu_chart }}" alt="Biểu đồ nhập xuất nguyên liệu" class="img-fluid">
     </div>
     <div class="col-lg-6 col-md-12">
         <h3>Biểu đồ nhập xuất phụ gia</h3>
-        <img src="{{ url_for('plot_phugia_png', start_date=start_date, end_date=end_date, tenphugia=request.args.get('tenphugia', '')) }}" alt="Biểu đồ nhập xuất phụ gia" class="img-fluid">
+        <img src="data:image/png;base64,{{ phugia_chart }}" alt="Biểu đồ nhập xuất phụ gia" class="img-fluid">
     </div>
 </div>
 

@@ -6,7 +6,7 @@ import json
 import pandas as pd
 import io
 from io import BytesIO
-
+import base64
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -151,8 +151,6 @@ def index():
                            supplier_names=supplier_names, 
                            ingredients_by_supplier=ingredients_by_supplier)
 
-
-
 def fetch_data_nguyenlieu(start_date, end_date, tennguyenlieu=None):
     conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()
@@ -172,8 +170,9 @@ def fetch_data_nguyenlieu(start_date, end_date, tennguyenlieu=None):
     cursor.close()
     conn.close()
     
-    result = [{"TenNguyenLieu": row.TenNguyenLieu, "TotalNhap": row.TotalNhap, "TotalXuat": row.TotalXuat} for row in data]
+    result = [{"TenNguyenLieu": row[0], "TotalNhap": row[1], "TotalXuat": row[2]} for row in data]
     return result
+
 def fetch_data_phugia(start_date, end_date, tenphugia=None):
     conn = pyodbc.connect(connection_string)
     cursor = conn.cursor()
@@ -192,8 +191,34 @@ def fetch_data_phugia(start_date, end_date, tenphugia=None):
     data = cursor.fetchall()
     cursor.close()
     conn.close()
-    result = [{"TenPhuGia": row.TenPhuGia, "TotalNhap": row.TotalNhap, "TotalXuat": row.TotalXuat} for row in data]
+    result = [{"TenPhuGia": row[0], "TotalNhap": row[1], "TotalXuat": row[2]} for row in data]
     return result
+
+def create_chart(data, title, xlabel, ylabel):
+    if "TenNguyenLieu" in data[0]:
+        labels = [row['TenNguyenLieu'] for row in data]
+    else:
+        labels = [row['TenPhuGia'] for row in data]
+    
+    total_nhap = [row['TotalNhap'] for row in data]
+    total_xuat = [row['TotalXuat'] for row in data]
+
+    sns.set(style="whitegrid")
+    plt.figure(figsize=(10, 5))
+    ax = sns.barplot(x=labels, y=total_nhap, color='blue', label='Nhập Kho')
+    sns.barplot(x=labels, y=total_xuat, color='red', label='Xuất Kho')
+
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.legend()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    img_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+    return img_base64
 
 @app.route('/thong_ke', methods=['GET'])
 def thong_ke():
@@ -205,77 +230,16 @@ def thong_ke():
     data_nguyenlieu = fetch_data_nguyenlieu(start_date, end_date, tennguyenlieu)
     data_phugia = fetch_data_phugia(start_date, end_date, tenphugia)
 
-    nguyenlieu_labels = [item['TenNguyenLieu'] for item in data_nguyenlieu] if data_nguyenlieu else []
-    nguyenlieu_data_nhap = [item['TotalNhap'] for item in data_nguyenlieu] if data_nguyenlieu else []
-    nguyenlieu_data_xuat = [item['TotalXuat'] for item in data_nguyenlieu] if data_nguyenlieu else []
-    
-    phugia_labels = [item['TenPhuGia'] for item in data_phugia] if data_phugia else []
-    phugia_data_nhap = [item['TotalNhap'] for item in data_phugia] if data_phugia else []
-    phugia_data_xuat = [item['TotalXuat'] for item in data_phugia] if data_phugia else []
+    nguyenlieu_chart = create_chart(data_nguyenlieu, 'Biểu đồ nhập xuất nguyên liệu', 'Nguyên liệu', 'Số lượng')
+    phugia_chart = create_chart(data_phugia, 'Biểu đồ nhập xuất phụ gia', 'Phụ gia', 'Số lượng')
 
-    return render_template('./baocao/quanly_baocao.html', 
+    return render_template('baocao/quanly_baocao.html', 
                            data_nguyenlieu=data_nguyenlieu, 
                            data_phugia=data_phugia, 
                            start_date=start_date, 
                            end_date=end_date,
-                           nguyenlieu_labels=json.dumps(nguyenlieu_labels),
-                           nguyenlieu_data_nhap=json.dumps(nguyenlieu_data_nhap),
-                           nguyenlieu_data_xuat=json.dumps(nguyenlieu_data_xuat),
-                           phugia_labels=json.dumps(phugia_labels),
-                           phugia_data_nhap=json.dumps(phugia_data_nhap),
-                           phugia_data_xuat=json.dumps(phugia_data_xuat))
-
-@app.route('/plot_nguyenlieu.png')
-def plot_nguyenlieu_png():
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
-    tennguyenlieu = request.args.get('tennguyenlieu')
-    data_nguyenlieu = fetch_data_nguyenlieu(start_date, end_date, tennguyenlieu)
-
-    ten_nguyen_lieu = [row['TenNguyenLieu'] for row in data_nguyenlieu]
-    total_nhap = [row['TotalNhap'] for row in data_nguyenlieu]
-    total_xuat = [row['TotalXuat'] for row in data_nguyenlieu]
-
-    sns.set(style="whitegrid")
-    plt.figure(figsize=(10, 10))
-    ax = sns.barplot(x=ten_nguyen_lieu, y=total_nhap, color='blue', label='Nhập Kho')
-    sns.barplot(x=ten_nguyen_lieu, y=total_xuat, color='red', label='Xuất Kho')
-
-    ax.set_title('Biểu đồ nhập xuất nguyên liệu')
-    ax.set_xlabel('Nguyên liệu')
-    ax.set_ylabel('Số lượng')
-    ax.legend()
-
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-    return send_file(img, mimetype='image/png')
-
-@app.route('/plot_phugia.png')
-def plot_phugia_png():
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
-    tenphugia = request.args.get('tenphugia')
-    data_phugia = fetch_data_phugia(start_date, end_date, tenphugia)
-
-    ten_phu_gia = [row['TenPhuGia'] for row in data_phugia]
-    total_nhap = [row['TotalNhap'] for row in data_phugia]
-    total_xuat = [row['TotalXuat'] for row in data_phugia]
-
-    sns.set(style="whitegrid")
-    plt.figure(figsize=(10, 10))
-    ax = sns.barplot(x=ten_phu_gia, y=total_nhap, color='blue', label='Nhập Kho')
-    sns.barplot(x=ten_phu_gia, y=total_xuat, color='red', label='Xuất Kho')
-
-    ax.set_title('Biểu đồ nhập xuất phụ gia')
-    ax.set_xlabel('Phụ gia')
-    ax.set_ylabel('Số lượng')
-    ax.legend()
-
-    img = io.BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-    return send_file(img, mimetype='image/png')
+                           nguyenlieu_chart=nguyenlieu_chart,
+                           phugia_chart=phugia_chart)
 
 if __name__ == '__main__':
     app.run(debug=True)
