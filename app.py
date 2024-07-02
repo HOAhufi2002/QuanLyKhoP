@@ -81,7 +81,7 @@ WHERE ID IN (
     output.seek(0)
     
     # Send the Excel file to the client
-    return send_file(output, download_name="report.xlsx", as_attachment=True)
+    return send_file(output, attachment_filename="report.xlsx", as_attachment=True)
 
 @app.route('/')
 def index():
