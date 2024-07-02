@@ -5,7 +5,8 @@
     <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
     <a href="{{ url_for('generate_report') }}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
         <i class="fas fa-download fa-sm text-white-50"></i> Generate Report
-    </a></div>
+    </a>
+</div>
 <!-- Welcome Message Row -->
 <div class="row">
     <div class="col-lg-12 mb-4">
@@ -21,7 +22,6 @@
 </div>
 <!-- Content Row -->
 <div class="row">
-
     <!-- Card Example -->
     <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
@@ -38,7 +38,6 @@
             </div>
         </div>
     </div>
-
     <!-- Card Example -->
     <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-success shadow h-100 py-2">
@@ -55,7 +54,6 @@
             </div>
         </div>
     </div>
-
     <!-- Card Example -->
     <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-info shadow h-100 py-2">
@@ -72,38 +70,48 @@
             </div>
         </div>
     </div>
-
-   
 </div>
 
 <!-- Charts Row -->
 <div class="row">
-    <div class="col-lg-12 mb-4">
+    <div class="col-lg-6 mb-4">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">Ingredient Stock Levels</h6>
             </div>
             <div class="card-body">
-                <canvas id="stockLevelsChart"></canvas>
+                <canvas id="ingredientStockLevelsChart"></canvas>
             </div>
         </div>
     </div>
-
-    
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Additive Stock Levels</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="additiveStockLevelsChart"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const stockLevelsChartCtx = document.getElementById('stockLevelsChart').getContext('2d');
-    const stockLevelsChart = new Chart(stockLevelsChartCtx, {
+    const ingredientStockLevelsChartCtx = document.getElementById('ingredientStockLevelsChart').getContext('2d');
+    const additiveStockLevelsChartCtx = document.getElementById('additiveStockLevelsChart').getContext('2d');
+
+    // Separate the data for ingredients and additives
+    const ingredientData = {{ ingredient_data|tojson }};
+    const additiveData = {{ additive_data|tojson }};
+
+    const ingredientStockLevelsChart = new Chart(ingredientStockLevelsChartCtx, {
         type: 'bar',
         data: {
-            labels: {{ ingredient_names|safe }},
+            labels: ingredientData.names,
             datasets: [{
                 label: 'Stock Levels',
-                data: {{ ingredient_stock_levels|safe }},
+                data: ingredientData.stock_levels,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -118,32 +126,24 @@
         }
     });
 
-    const ingredientsBySupplierChartCtx = document.getElementById('ingredientsBySupplierChart').getContext('2d');
-    const ingredientsBySupplierChart = new Chart(ingredientsBySupplierChartCtx, {
-        type: 'pie',
+    const additiveStockLevelsChart = new Chart(additiveStockLevelsChartCtx, {
+        type: 'bar',
         data: {
-            labels: {{ supplier_names|safe }},
+            labels: additiveData.names,
             datasets: [{
-                label: 'Ingredients by Supplier',
-                data: {{ ingredients_by_supplier|safe }},
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
+                label: 'Stock Levels',
+                data: additiveData.stock_levels,
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
                 borderWidth: 1
             }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
 </script>
